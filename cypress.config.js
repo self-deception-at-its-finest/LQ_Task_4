@@ -12,7 +12,7 @@ module.exports = defineConfig({
     viewportWidth: 1920,
     viewportHeight: 1080,
     e2e: {
-        baseUrl: "https://telnyx.com",
+        baseUrl: process.env.BASE_URL,
         specPattern: "**/*.feature",
         supportFile: false,
         async setupNodeEvents(on, config) {
