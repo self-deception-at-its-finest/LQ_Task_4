@@ -30,6 +30,8 @@ jobs:
           mkdir -p cypress/reports/html
 
       - name: Run tests and generate report
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
         run: |
             npm run report:generate
           
