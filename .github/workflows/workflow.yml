@@ -36,6 +36,21 @@ jobs:
           npm run test || true
           find cypress/reports -name '*.json' -size +0c -exec npx mochawesome-merge {} + > cypress/reports/mochareport.json || echo "⚠️ Failed to merge reports, skipping..."
           npx marge cypress/reports/mochareport.json --reportDir cypress/reports/html --inline || echo "⚠️ Failed to generate HTML report"
+          
+           if [ -f "cypress/reports/combined.json" ]; then
+            npx marge cypress/reports/combined.json -o public --inline
+          else
+            mkdir -p public
+            cat > public/index.html << 'EOF'
+            <html>
+            <head><title>Test Report</title></head>
+            <body>
+              <h1>No Test Results Available</h1>
+              <p>The test run completed but no report was generated.</p>
+            </body>
+            </html>
+            EOF
+          fi
 
       - name: Upload All Cypress Artifacts
         if: always()
@@ -53,6 +68,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: test-reports
-          folder: cypress/reports/html
+          folder: public
           clean: true
           token: ${{ secrets.GH_PAT }}
