@@ -27,6 +27,20 @@ module.exports = defineConfig({
         baseUrl: "https://telnyx.com",
         specPattern: "**/*.feature",
         supportFile: false,
-        setupNodeEvents,
+        setupNodeEvents(on, config) {
+            require('cypress-mochawesome-reporter/plugin')(on)
+        }
     },
+    reporter: 'cypress-mochawesome-reporter',
+    reporterOptions: {
+        reportDir: 'cypress/reports/mocha',
+        charts: true,
+        reportPageTitle: 'Cypress Test Report',
+        embeddedScreenshots: true,
+        inlineAssets: true,
+        saveAllAttempts: false,
+    },
+    screenshotsFolder: 'cypress/reports/mocha/assets',
+    video: true,
+    videosFolder: 'cypress/reports/mocha/assets',
 });
