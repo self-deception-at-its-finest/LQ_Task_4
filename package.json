@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "cypress-cucumber-preprocessor": {
-    "stepDefinitions": "cypress/e2e/[filepath]/**/*.{js,ts}",
-    "nonGlobalStepDefinitions": true
+    "stepDefinitions": [
+      "cypress/support/step_definitions/**/*.{js,ts}"
+    ],
+    "nonGlobalStepDefinitions": false
   },
   "scripts": {
     "cy:open": "cypress open",
