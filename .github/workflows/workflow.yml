@@ -29,28 +29,13 @@ jobs:
           rm -rf cypress/reports
           mkdir -p cypress/reports/html
 
-      - name: Run Cypress tests and generate Mochawesome report
-        env:
-          BASE_URL: ${{ secrets.BASE_URL }}
+      - name: Run tests and generate report
         run: |
-          npm run test || true
-          find cypress/reports -name '*.json' -size +0c -exec npx mochawesome-merge {} + > cypress/reports/mochareport.json || echo "⚠️ Failed to merge reports, skipping..."
-          npx marge cypress/reports/mochareport.json --reportDir cypress/reports/html --inline || echo "⚠️ Failed to generate HTML report"
+            npm run report:generate
           
-          if [ -f "cypress/reports/combined.json" ]; then
-                      npx marge cypress/reports/combined.json -o public --inline
-                    else
-                      mkdir -p public
-                      cat > public/index.html << 'EOF'
-                      <html>
-                      <head><title>Test Report</title></head>
-                      <body>
-                        <h1>No Test Results Available</h1>
-                        <p>The test run completed but no report was generated.</p>
-                      </body>
-                      </html>
-                      EOF
-                    fi
+            if [ -f "cypress/reports/html/mochareport.html" ]; then
+              mv cypress/reports/html/mochareport.html cypress/reports/html/index.html
+            fi
           
 
       - name: Upload All Cypress Artifacts
