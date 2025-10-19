@@ -31,14 +31,10 @@ jobs:
 
       - name: Run tests and generate report
         env:
-          BASE_URL: ${{ secrets.BASE_URL }}
+            BASE_URL: ${{ secrets.BASE_URL }}
         run: |
-            npm run report:generate
-          
-            if [ -f "cypress/reports/html/mochareport.html" ]; then
-              mv cypress/reports/html/mochareport.html cypress/reports/html/index.html
-            fi
-          
+            npx cypress run --browser chrome --reporter cypress-multi-reporters --reporter-options configFile=reporter-config.json
+        
 
       - name: Upload All Cypress Artifacts
         if: always()

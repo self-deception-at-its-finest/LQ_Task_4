@@ -8,16 +8,18 @@
 -   Install [NodeJS](https://nodejs.org/)
 
 -   Install [Git](https://git-scm.com/)
-    Dependencies:
-- [cypress](https://www.npmjs.com/package/cypress)
+
+## Dependencies
+
 - [cypress-cucumber-preprocessor](https://github.com/badeball/cypress-cucumber-preprocessor)
 - [multiple-cucumber-html-reporter](https://www.npmjs.com/package/multiple-cucumber-html-reporter)
 - [@cypress/browserify-preprocessor](https://www.npmjs.com/package/@cypress/browserify-preprocessor)
 
--   Clone this repo:
+
+Clone this repo:
 
 ```bash
-git clone https://github.com/self-deception-at-its-finest/LQ_Task_3
+git clone https://github.com/self-deception-at-its-finest/LQ_Task_4
 ```
 
 -   Go to the project folder
