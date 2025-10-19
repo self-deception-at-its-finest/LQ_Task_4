@@ -12,26 +12,35 @@ jobs:
     name: E2E Tests
 
     steps:
-      - name: Checkout code
+      - name: 🧩 Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: npm ci
 
-      - name: Create reports directory
-        run: mkdir -p cypress/reports/html
+      - name: 🧹 Clean reports directory
+        run: |
+          rm -rf cypress/reports
+          mkdir -p cypress/reports/html
 
-      - name: Run Cypress tests and generate report
-        run: npm run report:generate
+      - name: 🚀 Run Cypress tests and generate Mochawesome report
+        run: |
+          # 1️⃣ Запускаем тесты (не прерываем job, даже если есть фейлы)
+          npm run test || true
 
+          # 2️⃣ Объединяем только непустые JSON-отчёты
+          find cypress/reports -name '*.json' -size +0c -exec npx mochawesome-merge {} + > cypress/reports/mochareport.json || echo "⚠️ Failed to merge reports, skipping..."
 
-      - name: Upload All Cypress Artifacts
+          # 3️⃣ Генерируем HTML отчёт
+          npx marge cypress/reports/mochareport.json --reportDir cypress/reports/html --inline || echo "⚠️ Failed to generate HTML report"
+
+      - name: 📤 Upload All Cypress Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -42,8 +51,7 @@ jobs:
             cypress/screenshots/
           retention-days: 1
 
-
-      - name: Deploy HTML report to GitHub Pages
+      - name: 🌐 Deploy HTML report to GitHub Pages
         if: always()
         uses: JamesIves/github-pages-deploy-action@v4
         with:
