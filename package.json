@@ -20,9 +20,9 @@
     "test:headed": "cypress run --headed",
     "test:chrome": "cypress run --browser chrome",
     "test:report": "cypress run --reporter cypress-mochawesome-reporter",
-    "report:generate": "npm run test:report && npm run report:merge && npm run report:generate-html",
-    "report:merge": "mochawesome-merge cypress/reports/mocha/*.json > cypress/reports/mochareport.json",
-    "report:generate-html": "marge cypress/reports/mochareport.json --reportDir cypress/reports/html --inline --assetsDir cypress/reports/mocha/assets"
+    "report:merge": "mochawesome-merge cypress/reports/*.json > cypress/reports/mochareport.json",
+    "report:generate-html": "marge cypress/reports/mochareport.json --reportDir cypress/reports/html --inline",
+    "report:generate": "npm run test:report && npm run report:merge && npm run report:generate-html"
   },
   "private": true,
   "devDependencies": {
