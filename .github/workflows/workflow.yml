@@ -19,24 +19,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Create reports directory
+        run: mkdir -p cypress/reports/html
 
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
-        with:
-          browser: chrome
-          headed: false
-          record: false
-          command: npx cypress run --reporter mochawesome --reporter-options overwrite=false,html=false,json=true,reportDir=cypress/reports
-
-
-      - name: Generate Mochawesome HTML report
-        if: always()
+      - name: Run Cypress tests and generate report
         run: npm run report:generate
-
 
 
       - name: Upload All Cypress Artifacts
@@ -47,6 +39,7 @@ jobs:
           path: |
             cypress/reports/
             cypress/videos/
+            cypress/screenshots/
           retention-days: 1
 
 
