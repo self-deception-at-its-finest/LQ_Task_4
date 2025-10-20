@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "types": ["cypress", "@badeball/cypress-cucumber-preprocessor"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "cypress/**/*.ts",
+    "cypress/**/*.js"
+  ]
+}

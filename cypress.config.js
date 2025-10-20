@@ -1,0 +1,43 @@
+const { defineConfig } = require("cypress");
+const createBundler = require("@bahmutov/cypress-esbuild-preprocessor");
+const preprocessor = require("@badeball/cypress-cucumber-preprocessor");
+const createEsbuildPlugin = require("@badeball/cypress-cucumber-preprocessor/esbuild");
+
+
+module.exports = defineConfig({
+    defaultCommandTimeout: 10000,
+    execTimeout: 5000,
+    taskTimeout: 5000,
+    "chromeWebSecurity": false,
+    viewportWidth: 1920,
+    viewportHeight: 1080,
+    e2e: {
+        baseUrl: process.env.BASE_URL,
+        specPattern: "**/*.feature",
+        supportFile: false,
+        async setupNodeEvents(on, config) {
+            require('cypress-mochawesome-reporter/plugin')(on)
+            await preprocessor.addCucumberPreprocessorPlugin(on, config)
+            on(
+                "file:preprocessor",
+                createBundler({
+                    plugins: [createEsbuildPlugin.default(config)],
+                })
+            );
+            // Make sure to return the config object as it might have been modified by the plugin.
+            return config;
+        }
+    },
+    reporter: 'cypress-mochawesome-reporter',
+    reporterOptions: {
+        reportDir: 'cypress/reports/mocha',
+        charts: true,
+        reportPageTitle: 'Cypress Test Report',
+        embeddedScreenshots: true,
+        inlineAssets: true,
+        saveAllAttempts: false,
+    },
+    screenshotsFolder: 'cypress/reports/mocha/assets',
+    video: true,
+    videosFolder: 'cypress/reports/mocha/assets',
+});
