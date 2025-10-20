@@ -24,13 +24,27 @@ jobs:
         run: npm ci
 
 
-      - name: Run Cypress tests and generate report
+      - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
         with:
-          command: npm run report:generate
+          browser: chrome
+          headed: false
+          record: false
+          command: test:report
 
+
+      - name: Generate Mochawesome HTML report
+        if: always()
+        run: |
+          mkdir -p cypress/reports/html
+          if compgen -G "cypress/reports/*.json" > /dev/null; then
+            npx mochawesome-merge cypress/reports/*.json > cypress/reports/output.json
+            npx marge cypress/reports/output.json --reportDir cypress/reports/html --reportFilename index.html
+          else
+            echo "No JSON reports found. Skipping merge."
+          fi
 
 
 
