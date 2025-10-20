@@ -1,61 +1,46 @@
-name: Telnyx Autotests
-
+name: Telnyx Autotests Cypress+Cucumber
 on:
   push:
-    branches:
-      - LQB-23
-  pull_request:
-
+    branches: [main]
 jobs:
-  cypress-run:
-    runs-on: ubuntu-latest
-    name: E2E Tests
-
+  Run_test:
+    runs-on: Windows-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: 22
-          cache: 'npm'
+          cache: "npm"
 
-      - name: Install dependencies
-        run: npm ci
 
-      - name: Clean reports directory
-        run: |
-          rm -rf cypress/reports
-          mkdir -p cypress/reports/html
+      - name: install all dependencies
+        run: npm i
 
-      - name: Run tests and generate report
+
+      - name: run test
         env:
-            BASE_URL: ${{ secrets.BASE_URL }}
-        run: |
-            npm run report:generate
-            
-            if [ -f "cypress/reports/html/mochareport.html" ]; then
-              mv cypress/reports/html/mochareport.html cypress/reports/html/index.html
-            fi
-        
+          BASE_URL: ${{ secrets.BASE_URL }}
+        run: npm run cypress:run
 
-      - name: Upload All Cypress Artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-full-report
-          path: |
-            cypress/reports/
-            cypress/videos/
-            cypress/screenshots/
-          retention-days: 1
 
-      - name: Deploy HTML report to GitHub Pages
+      - name: Generate reports
         if: always()
-        uses: JamesIves/github-pages-deploy-action@v4
+        run: npm run cypress:report
+
+
+      - name: Upload artifact cucumber-report
+        uses: actions/upload-artifact@v3
+        if: always()
         with:
-          branch: test-reports
-          folder: cypress/reports/html
-          clean: true
-          token: ${{ secrets.GH_PAT }}
+          name: cucumber-report
+          path: ./reports/cucumber-htmlreport
+
+
+      - name: Deploy to pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3.7.3
+        with:
+          github_token: ${{ secrets.GH_PAT}}
+          publish_branch: test-reports
+          publish_dir: reports/cucumber-htmlreport/
