@@ -1,7 +1,11 @@
 name: Telnyx Autotests Cypress+Cucumber
+
 on:
   push:
-    branches: [main]
+    branches:
+      - LQB-22
+  pull_request:
+
 jobs:
   Run_test:
     runs-on: Windows-latest
