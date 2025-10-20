@@ -32,7 +32,7 @@ jobs:
           browser: chrome
           headed: false
           record: false
-          command: test:report
+          command: npm run test:report
 
 
       - name: Generate Mochawesome HTML report
